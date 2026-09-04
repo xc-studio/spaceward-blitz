@@ -1,0 +1,79 @@
+canvas {
+  border: 4mm ridge rgba(150, 150, 150, .6);
+}
+
+p {
+  text-align: center;
+}
+
+.orbitron {
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.as {
+  position: absolute;
+  top: 400px;
+  left: 380px;
+  font-size: 180%;
+  font-family: "Orbitron", sans-serif;
+}
+
+
+
+.submit {
+  position: absolute;
+  top: 400px;
+  left: 700px;
+  font-size: 180%;
+  width: 100;
+  height: 50;
+}
+
+.savecode {
+  position: absolute;
+  top: 150px;
+  left: 100px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 600%;
+  color: #00ff00;
+}
+
+.copy {
+  position: absolute;
+  top: 500px;
+  left: 800px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 380%;
+  background: #00ff77;
+  color: #ffffff;
+  border: 5px solid #03ab52;
+  cursor: pointer;
+}
+.copy:hover {
+  position: absolute;
+  top: 500px;
+  left: 800px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 380%;
+  background: #ffffff;
+  color: #000000;
+  border: 5px solid #03ab52;
+}
+.copy:active {
+  position: absolute;
+  top: 500px;
+  left: 800px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 380%;
+  background: #6688ff;
+  color: #ffffff;
+  border: 5px solid #4359ab;
+}
+
+#a {
+  position: relative;
+  z-index: -10;
+}
