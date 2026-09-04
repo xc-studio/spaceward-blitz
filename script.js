@@ -454,6 +454,84 @@ let ボタンフラグ = "off";
 
 let ゲームの状態 = "start";
 
+const ホームボタン = {
+    x: 20,
+    y: 20,
+    width: 70,
+    height: 70,
+    value: "X",
+    fillColor: "#cc0000",
+    strokeColor: "#ff5555",
+    strokeWidth: 8,
+};
+
+const プレイボタン = {
+    x: 930,
+    y: 570,
+    width: 230,
+    height: 80,
+    value: "PLAY",
+    fillColor: "#007700",
+    strokeColor: "#00ff00",
+    strokeWidth: 8,
+};
+
+function ホームボタン内(pointX, pointY) {
+    return (
+        ホームボタン.x < pointX &&
+        pointX < ホームボタン.x + ホームボタン.width &&
+        ホームボタン.y < pointY &&
+        pointY < ホームボタン.y + ホームボタン.height
+    );
+}
+
+function プレイボタン内(pointX, pointY) {
+    return (
+        プレイボタン.x < pointX &&
+        pointX < プレイボタン.x + プレイボタン.width &&
+        プレイボタン.y < pointY &&
+        pointY < プレイボタン.y + プレイボタン.height
+    );
+}
+
+function ホームボタンを描く() {
+    ctx.beginPath();
+    ctx.fillStyle = ホームボタン.fillColor;
+    ctx.strokeStyle = ホームボタン.strokeColor;
+    ctx.lineWidth = ホームボタン.strokeWidth;
+    ctx.rect(ホームボタン.x, ホームボタン.y, ホームボタン.width, ホームボタン.height);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "45px orbitron";
+    ctx.fillText(ホームボタン.value, ホームボタン.x + ホームボタン.width / 2, ホームボタン.y + ホームボタン.height / 2);
+}
+
+function プレイボタンを描く() {
+    ctx.beginPath();
+    ctx.fillStyle = プレイボタン.fillColor;
+    ctx.strokeStyle = プレイボタン.strokeColor;
+    ctx.lineWidth = プレイボタン.strokeWidth;
+    ctx.rect(プレイボタン.x, プレイボタン.y, プレイボタン.width, プレイボタン.height);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = プレイボタン.strokeColor;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "35px orbitron";
+    ctx.fillText(プレイボタン.value, プレイボタン.x + プレイボタン.width / 2, プレイボタン.y + プレイボタン.height / 2);
+}
+
+function ホームへ戻る() {
+    タッチ移動先 = null;
+    playerX変化量 = 0;
+    playerY変化量 = 0;
+    ゲームの状態 = "start";
+    ホーム画面();
+}
+
 function キャンバス座標を取得(evt) {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -477,6 +555,20 @@ window.onload = function () {
     canvas.height = キャンバス高さ;
     インポート処理(getLocalStorage("save"));
     canvas.addEventListener("click", (evt) => {
+        const point = キャンバス座標を取得(evt);
+        if (ゲームの状態 !== "start" && ホームボタン内(point.x, point.y)) {
+            ホームへ戻る();
+            return;
+        }
+        if (
+            typeof ゲームの状態 === "number" &&
+            ゲームの状態 >= 1 &&
+            ゲームの状態 <= 6 &&
+            プレイボタン内(point.x, point.y)
+        ) {
+            ゲームスタート(ゲームの状態);
+            return;
+        }
         if (ゲームの状態 === "save") {
             ステージ選択(0);
         } else {
@@ -513,7 +605,11 @@ window.onload = function () {
 
     canvas.addEventListener("touchstart", タッチ座標を更新, { passive: false });
     canvas.addEventListener("touchmove", タッチ座標を更新, { passive: false });
-    canvas.addEventListener("touchend", () => {
+    canvas.addEventListener("touchend", (evt) => {
+        const point = キャンバス座標を取得(evt.changedTouches[0]);
+        if (ゲームの状態 !== "start" && ホームボタン内(point.x, point.y)) {
+            ホームへ戻る();
+        }
         タッチ移動先 = null;
     });
 
@@ -663,6 +759,9 @@ function 星空描画() {
 }
 
 function 画面を描く() {
+    if (ゲームの状態 !== "game") {
+        return;
+    }
     星空描画();
     弾を消す();
     if (無敵フレーム数 >= 15) {
@@ -719,11 +818,12 @@ function 画面を描く() {
     無敵フレーム数++;
     敵描画();
     レベルを描く();
+    ホームボタンを描く();
     if (ゲームの状態 === "gameOver") {
         ゲームオーバー処理();
     } else if (ゲームの状態 === "gameClear") {
         ゲームクリア処理2(number);
-    } else {
+    } else if (ゲームの状態 === "game") {
         requestAnimationFrame(画面を描く);
     }
 }
@@ -1154,6 +1254,7 @@ function ホームステージ詳細(ステージ番号) {
                 ctx.drawImage(メダル[ステージ番号 - 1][ru].imageFalse, メダル[ステージ番号 - 1][ru].x, 550);
             }
         }
+        プレイボタンを描く();
     } else if (ステージ番号 === 0) {
         ctx.fillStyle = "#00ff00";
         ctx.textAlign = "left";

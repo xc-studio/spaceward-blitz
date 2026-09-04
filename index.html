@@ -20,7 +20,82 @@
         <script src="script.js"></script>
     </head>
     <body>
-        <canvas id="gameCanvas" class="orbitron"></canvas>
+        <div class="game-frame">
+            <canvas id="gameCanvas" class="orbitron"></canvas>
+        </div>
+        <main class="how-to-play" aria-labelledby="how-to-play-title">
+            <header class="guide-header">
+                <p class="guide-kicker">MISSION BRIEFING</p>
+                <h1 id="how-to-play-title">はじめての方へ</h1>
+                <p>宇宙船を動かして敵を倒し、ステージを攻略するシューティングゲームです。弾は自動で発射されます。</p>
+            </header>
+
+            <div class="guide-grid">
+                <section class="guide-card">
+                    <h2>1. ステージを選ぶ</h2>
+                    <p>
+                        ホーム画面でステージ1〜6を選び、下に表示される
+                        <strong>PLAY</strong> を押すと出撃します。ステージごとに敵の出現パターンや攻撃が変わります。
+                    </p>
+                </section>
+                <section class="guide-card">
+                    <h2>2. 宇宙船を動かす</h2>
+                    <ul>
+                        <li><strong>PC：</strong>矢印キー（↑ ↓ ← →）で移動</li>
+                        <li><strong>スマホ：</strong>画面を押した場所へ移動</li>
+                    </ul>
+                    <p>画面の端から外へは出られません。敵や敵弾に触れるとHPが減ります。</p>
+                </section>
+                <section class="guide-card">
+                    <h2>3. 敵を倒す</h2>
+                    <p>
+                        自機は自動で上方向へ撃ち続けます。敵の体力ゲージがなくなると撃墜です。画面下の
+                        <strong>Level</strong> は、敵を倒したときに上がります。
+                    </p>
+                    <p>Levelが高いほど連射が速くなり、Level 100・200で同時に撃つ弾が増えます。</p>
+                </section>
+                <section class="guide-card guide-card--accent">
+                    <h2>クリア後の報酬</h2>
+                    <p>
+                        ステージの時間が終わると、撃墜率に応じてクリアします。獲得コインは「ステージ番号 ×
+                        撃墜率」に、ノーダメージなら<strong>+50</strong>されます。
+                    </p>
+                    <p>
+                        HPが0になると <strong>Game Over</strong> です。途中で左上の
+                        <strong>X</strong> を押すとホームへ戻れます。
+                    </p>
+                </section>
+            </div>
+
+            <details class="guide-details">
+                <summary>メダル・強化・セーブについて</summary>
+                <div class="details-content">
+                    <div>
+                        <h3>メダルの条件</h3>
+                        <ul>
+                            <li>1枚目：HPを一度も減らさずクリア</li>
+                            <li>2枚目：撃墜率100%</li>
+                            <li>3枚目：撃墜率50%以上</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>グレードアップ</h3>
+                        <p>
+                            ホーム画面のコインを使ってグレードを上げます。グレードは出撃時のLevelになり、最初から強い状態で戦えます。必要コインは画面右上の
+                            <strong>COST</strong> で確認できます。
+                        </p>
+                    </div>
+                    <div>
+                        <h3>IMPORT / EXPORT</h3>
+                        <p>
+                            <strong>EXPORT</strong>
+                            は進行状況をセーブファイルとしてダウンロードします。別の場所で続きから遊ぶときは
+                            <strong>IMPORT</strong> でそのファイルを選びます。
+                        </p>
+                    </div>
+                </div>
+            </details>
+        </main>
         <p class="savecode" id="d"></p>
         <input class="as" id="a" type="hidden" maxlength="12" style="width: 300px; height: 50px" accept=".save" />
         <input class="submit" id="s" type="hidden" value="入力" style="width: 80px; height: 50px" />
