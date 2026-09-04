@@ -207,6 +207,8 @@ let playerY = 337.5;
 let playerX変化量 = 0;
 let playerY変化量 = 0;
 
+let タッチ移動先 = null;
+
 let playerHP;
 
 let 背景星空配列 = [];
@@ -452,6 +454,22 @@ let ボタンフラグ = "off";
 
 let ゲームの状態 = "start";
 
+function キャンバス座標を取得(evt) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: ((evt.clientX - rect.left) / rect.width) * キャンバス幅,
+        y: ((evt.clientY - rect.top) / rect.height) * キャンバス高さ,
+    };
+}
+
+function タッチ座標を更新(evt) {
+    if (ゲームの状態 !== "game" || evt.touches.length === 0) {
+        return;
+    }
+    タッチ移動先 = キャンバス座標を取得(evt.touches[0]);
+    evt.preventDefault();
+}
+
 window.onload = function () {
     canvas = document.getElementById("gameCanvas");
     ctx = canvas.getContext("2d");
@@ -463,8 +481,9 @@ window.onload = function () {
             ステージ選択(0);
         } else {
             if (ボタンフラグ === "on") {
-                const pointX = evt.offsetX;
-                const pointY = evt.offsetY;
+                const point = キャンバス座標を取得(evt);
+                const pointX = point.x;
+                const pointY = point.y;
                 let フラグ = true;
                 for (let index = 0; index < ボタン.length; index++) {
                     if (
@@ -492,6 +511,12 @@ window.onload = function () {
         }
     });
 
+    canvas.addEventListener("touchstart", タッチ座標を更新, { passive: false });
+    canvas.addEventListener("touchmove", タッチ座標を更新, { passive: false });
+    canvas.addEventListener("touchend", () => {
+        タッチ移動先 = null;
+    });
+
     スタート画面();
 
     window.addEventListener("keydown", keydownfunc, true);
@@ -511,8 +536,6 @@ window.onload = function () {
         if (
             !(ゲームの状態 === "start") &&
             !(ゲームの状態 === "game") &&
-            !(ゲームの状態 == 0) &&
-            !(ゲームの状態 === "gameOver") &&
             !(ゲームの状態 === "gameClear") &&
             !(ゲームの状態 === "save") &&
             !(ゲームの状態 === "save2")
@@ -663,24 +686,22 @@ function 画面を描く() {
     ctx.textAlign = "right";
     ctx.fillStyle = "white";
     ctx.fillText(`HP ${playerHP} / 200`, 1200, 650);
-    if (playerX変化量 >= 0) {
-        if (playerX < キャンバス幅) {
-            playerX = playerX + playerX変化量;
+    if (タッチ移動先 !== null) {
+        const xの差 = タッチ移動先.x - playerX;
+        const yの差 = タッチ移動先.y - playerY;
+        const 距離 = 距離を測る(xの差, yの差);
+        const タッチ移動速度 = 8;
+        if (距離 > 0) {
+            const 移動量 = Math.min(タッチ移動速度, 距離);
+            playerX += (xの差 / 距離) * 移動量;
+            playerY += (yの差 / 距離) * 移動量;
         }
     } else {
-        if (playerX > 0) {
-            playerX = playerX + playerX変化量;
-        }
+        playerX += playerX変化量;
+        playerY += playerY変化量;
     }
-    if (playerY変化量 >= 0) {
-        if (playerY < キャンバス高さ) {
-            playerY = playerY + playerY変化量;
-        }
-    } else {
-        if (playerY > 0) {
-            playerY = playerY + playerY変化量;
-        }
-    }
+    playerX = Math.max(25, Math.min(キャンバス幅 - 25, playerX));
+    playerY = Math.max(25, Math.min(キャンバス高さ - 25, playerY));
 
     経過フレーム数++;
     if (playerimageアニメーション === 1) {
