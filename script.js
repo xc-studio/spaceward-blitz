@@ -454,6 +454,8 @@ let ボタンフラグ = "off";
 
 let ゲームの状態 = "start";
 
+let クリア画面表示済み = false;
+
 const ホームボタン = {
     x: 20,
     y: 20,
@@ -759,7 +761,7 @@ function 星空描画() {
 }
 
 function 画面を描く() {
-    if (ゲームの状態 !== "game") {
+    if (ゲームの状態 !== "game" && ゲームの状態 !== "gameOver" && ゲームの状態 !== "gameClear") {
         return;
     }
     星空描画();
@@ -1533,10 +1535,15 @@ function アラート処理() {
 function ゲームクリア処理() {
     if (ゲームの状態 == "game") {
         ゲームの状態 = "gameClear";
+        画面を描く();
     }
 }
 
 function ゲームクリア処理2(ステージ名) {
+    if (クリア画面表示済み) {
+        return;
+    }
+    クリア画面表示済み = true;
     let 撃墜率;
     if (総出現敵数 === 0) {
         撃墜率 = 0;
@@ -1653,6 +1660,7 @@ async function ゲームスタート(番号) {
     ボタンフラグ = "off";
     number = 番号;
     ゲームの状態 = "game";
+    クリア画面表示済み = false;
     攻撃力 = 1;
     レベル = グレード;
     playerHP = 200;
