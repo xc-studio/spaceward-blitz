@@ -761,7 +761,11 @@ function 星空描画() {
 }
 
 function 画面を描く() {
-    if (ゲームの状態 !== "game" && ゲームの状態 !== "gameOver" && ゲームの状態 !== "gameClear") {
+    if (ゲームの状態 === "gameClear") {
+        ゲームクリア処理2(number);
+        return;
+    }
+    if (ゲームの状態 !== "game" && ゲームの状態 !== "gameOver") {
         return;
     }
     星空描画();
@@ -823,8 +827,6 @@ function 画面を描く() {
     ホームボタンを描く();
     if (ゲームの状態 === "gameOver") {
         ゲームオーバー処理();
-    } else if (ゲームの状態 === "gameClear") {
-        ゲームクリア処理2(number);
     } else if (ゲームの状態 === "game") {
         requestAnimationFrame(画面を描く);
     }
@@ -1535,7 +1537,7 @@ function アラート処理() {
 function ゲームクリア処理() {
     if (ゲームの状態 == "game") {
         ゲームの状態 = "gameClear";
-        画面を描く();
+        ゲームクリア処理2(number);
     }
 }
 
